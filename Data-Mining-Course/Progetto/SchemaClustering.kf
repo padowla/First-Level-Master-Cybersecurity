@@ -1,0 +1,194 @@
+{
+	"flow_name" : "SchemaClustering",
+	"steps" : [
+		{
+			"class" : "weka.knowledgeflow.steps.Loader",
+			"properties" : {
+				"loader" : {
+					"type" : "loader",
+					"class" : "weka.core.converters.ArffLoader",
+					"filePath" : "C:/Users/franc/dati/Local/2022Local/Lezioni/MasterCybersecurity/Progetto/compoundClustering.arff",
+					"useRelativePath" : false
+				},
+				"name" : "ArffLoader"
+			},
+			"connections" : {
+				"dataSet" : [
+					"DataVisualizer",
+					"TrainingSetMaker"
+				]
+			},
+			"coordinates" : "63,102"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.DataVisualizer",
+			"properties" : {
+				"name" : "DataVisualizer",
+				"offscreenAdditionalOpts" : "",
+				"offscreenHeight" : "400",
+				"offscreenRendererName" : "Weka Chart Renderer",
+				"offscreenWidth" : "500",
+				"offscreenXAxis" : "",
+				"offscreenYAxis" : ""
+			},
+			"connections" : {
+			},
+			"coordinates" : "63,240"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Clusterer",
+			"properties" : {
+				"clusterer" : {
+					"type" : "optionHandler",
+					"class" : "weka.clusterers.DBSCAN",
+					"options" : "-E 0.1 -M 3 -A \"weka.core.EuclideanDistance -R first-last\""
+				},
+				"loadClustererFileName" : "",
+				"name" : "DBSCAN"
+			},
+			"connections" : {
+				"batchClusterer" : [
+					"PredictionAppender",
+					"ClustererPerformanceEvaluator"
+				]
+			},
+			"coordinates" : "331,104"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ClustererPerformanceEvaluator",
+			"properties" : {
+				"name" : "ClustererPerformanceEvaluator"
+			},
+			"connections" : {
+				"text" : [
+					"TextViewer"
+				]
+			},
+			"coordinates" : "466,175"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.TrainingSetMaker",
+			"properties" : {
+				"name" : "TrainingSetMaker"
+			},
+			"connections" : {
+				"trainingSet" : [
+					"DBSCAN",
+					"SimpleKMeans"
+				]
+			},
+			"coordinates" : "197,102"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.PredictionAppender",
+			"properties" : {
+				"appendProbabilities" : false,
+				"name" : "PredictionAppender"
+			},
+			"connections" : {
+				"trainingSet" : [
+					"DataVisualizer2"
+				],
+				"testSet" : [
+					"DataVisualizer2"
+				]
+			},
+			"coordinates" : "464,26"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.DataVisualizer",
+			"properties" : {
+				"name" : "DataVisualizer2",
+				"offscreenAdditionalOpts" : "",
+				"offscreenHeight" : "400",
+				"offscreenRendererName" : "Weka Chart Renderer",
+				"offscreenWidth" : "500",
+				"offscreenXAxis" : "",
+				"offscreenYAxis" : ""
+			},
+			"connections" : {
+			},
+			"coordinates" : "605,27"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.TextViewer",
+			"properties" : {
+				"name" : "TextViewer"
+			},
+			"connections" : {
+			},
+			"coordinates" : "604,175"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Clusterer",
+			"properties" : {
+				"clusterer" : {
+					"type" : "optionHandler",
+					"class" : "weka.clusterers.SimpleKMeans",
+					"options" : "-init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 6 -A \"weka.core.EuclideanDistance -R first-last\" -I 500 -num-slots 1 -S 10"
+				},
+				"loadClustererFileName" : "",
+				"name" : "SimpleKMeans"
+			},
+			"connections" : {
+				"batchClusterer" : [
+					"ClustererPerformanceEvaluator2",
+					"PredictionAppender2"
+				]
+			},
+			"coordinates" : "310,310"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ClustererPerformanceEvaluator",
+			"properties" : {
+				"name" : "ClustererPerformanceEvaluator2"
+			},
+			"connections" : {
+				"text" : [
+					"TextViewer2"
+				]
+			},
+			"coordinates" : "465,309"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.TextViewer",
+			"properties" : {
+				"name" : "TextViewer2"
+			},
+			"connections" : {
+			},
+			"coordinates" : "610,309"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.PredictionAppender",
+			"properties" : {
+				"appendProbabilities" : false,
+				"name" : "PredictionAppender2"
+			},
+			"connections" : {
+				"trainingSet" : [
+					"DataVisualizer22"
+				],
+				"testSet" : [
+					"DataVisualizer22"
+				]
+			},
+			"coordinates" : "459,435"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.DataVisualizer",
+			"properties" : {
+				"name" : "DataVisualizer22",
+				"offscreenAdditionalOpts" : "",
+				"offscreenHeight" : "400",
+				"offscreenRendererName" : "Weka Chart Renderer",
+				"offscreenWidth" : "500",
+				"offscreenXAxis" : "",
+				"offscreenYAxis" : ""
+			},
+			"connections" : {
+			},
+			"coordinates" : "600,436"
+		}
+	]
+}

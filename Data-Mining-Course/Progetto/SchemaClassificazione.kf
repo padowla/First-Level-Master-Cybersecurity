@@ -1,0 +1,127 @@
+{
+	"flow_name" : "SchemaClassificazione",
+	"steps" : [
+		{
+			"class" : "weka.knowledgeflow.steps.CrossValidationFoldMaker",
+			"properties" : {
+				"name" : "CrossValidationFoldMaker",
+				"numFolds" : "5",
+				"preserveOrder" : false,
+				"seed" : "1"
+			},
+			"connections" : {
+				"trainingSet" : [
+					"AttributeSelectedClassifier"
+				],
+				"testSet" : [
+					"AttributeSelectedClassifier"
+				]
+			},
+			"coordinates" : "331,63"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ClassifierPerformanceEvaluator",
+			"properties" : {
+				"collectPredictionsForVisAndAUC" : true,
+				"costMatrixString" : "",
+				"errorPlotPointSizeProportionalToMargin" : false,
+				"evaluateWithRespectToCosts" : false,
+				"evaluationMetricsToOutput" : "Correct,Incorrect,Kappa,Total cost,Average cost,KB relative,KB information,Correlation,Complexity 0,Complexity scheme,Complexity improvement,MAE,RMSE,RAE,RRSE,TP rate,FP rate,Precision,Recall,F-measure,MCC,ROC area,PRC area",
+				"name" : "ClassifierPerformanceEvaluator",
+				"outputConfusionMatrix" : true,
+				"outputEntropyMetrics" : false,
+				"outputPerClassStats" : true
+			},
+			"connections" : {
+				"text" : [
+					"TextViewer"
+				]
+			},
+			"coordinates" : "664,65"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.TextViewer",
+			"properties" : {
+				"name" : "TextViewer"
+			},
+			"connections" : {
+			},
+			"coordinates" : "666,208"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ClassAssigner",
+			"properties" : {
+				"classColumn" : "Class",
+				"name" : "ClassAssigner"
+			},
+			"connections" : {
+				"dataSet" : [
+					"CrossValidationFoldMaker"
+				]
+			},
+			"coordinates" : "176,64"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Loader",
+			"properties" : {
+				"loader" : {
+					"type" : "loader",
+					"class" : "weka.core.converters.ArffLoader",
+					"filePath" : "C:/Users/franc/dati/Local/2022Local/Lezioni/MasterCybersecurity/Progetto/creditCardRidotto.arff",
+					"useRelativePath" : false
+				},
+				"name" : "ArffLoader"
+			},
+			"connections" : {
+				"dataSet" : [
+					"ClassAssigner"
+				]
+			},
+			"coordinates" : "28,63"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.TextViewer",
+			"properties" : {
+				"name" : "TextViewer2"
+			},
+			"connections" : {
+			},
+			"coordinates" : "479,199"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Classifier",
+			"properties" : {
+				"classifier" : {
+					"type" : "optionHandler",
+					"class" : "weka.classifiers.meta.AttributeSelectedClassifier",
+					"options" : "-E \"weka.attributeSelection.CfsSubsetEval -P 1 -E 1\" -S \"weka.attributeSelection.BestFirst -D 1 -N 5\" -W weka.classifiers.meta.FilteredClassifier -- -F \"weka.filters.supervised.instance.SMOTE -C 0 -K 5 -P 100.0 -S 1\" -S 1 -W weka.classifiers.trees.J48 -- -C 0.25 -M 2"
+				},
+				"loadClassifierFileName" : "",
+				"name" : "AttributeSelectedClassifier",
+				"resetIncrementalClassifier" : false,
+				"updateIncrementalClassifier" : true
+			},
+			"connections" : {
+				"batchClassifier" : [
+					"ClassifierPerformanceEvaluator"
+				],
+				"text" : [
+					"TextViewer2"
+				],
+				"graph" : [
+					"GraphViewer"
+				]
+			},
+			"coordinates" : "479,63"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.GraphViewer",
+			"properties" : {
+				"name" : "GraphViewer"
+			},
+			"connections" : {
+			},
+			"coordinates" : "368,201"
+		}
+	]
+}
